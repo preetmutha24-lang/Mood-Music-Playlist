@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MoodTunes - Your Emotion-Based Music Experience</title>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Arial", sans-serif;
+        overflow-x: hidden;
+        background: #0a0a0a;
+      }
+
+      /* Landing Page */
+      .landing-page {
+        min-height: 100vh;
+        background: linear-gradient(
+          135deg,
+          #1a1a2e 0%,
+          #16213e 50%,
+          #0f3460 100%
+        );
+        position: relative;
+        overflow: hidden;
+      }
+
+      .floating-notes {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+      }
+
+      .note {
+        position: absolute;
+        font-size: 2rem;
+        opacity: 0.1;
+        animation: float 20s infinite;
+        color: #00d4ff;
+      }
+
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(0) rotate(0deg);
+        }
+        50% {
+          transform: translateY(-50px) rotate(90deg);
+        }
+      }
+
+      .note:nth-child(1) {
+        left: 10%;
+        animation-delay: 0s;
+      }
+      .note:nth-child(2) {
+        left: 25%;
+        animation-delay: 3s;
+      }
+      .note:nth-child(3) {
+        left: 45%;
+        animation-delay: 1s;
+      }
+      .note:nth-child(4) {
+        left: 65%;
+        animation-delay: 4s;
+      }
+      .note:nth-child(5) {
+        left: 85%;
+        animation-delay: 2s;
+      }
+
+      .landing-content {
+        position: relative;
+        z-index: 10;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        padding: 20px;
+      }
+
+      .logo-container {
+        margin-bottom: 30px;
+        animation: pulse 2s infinite;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.05);
+        }
+      }
+
+      .logo {
+        font-size: 6rem;
+        background: linear-gradient(45deg, #00d4ff, #00ffff);
+        -webkit-text-fill-color: transparent;
+        filter: drop-shadow(0 0 20px rgba(0, 212, 255, 0.5));
+      }
+
+      .main-title {
+        font-size: 4rem;
+        font-weight: bold;
+        color: #00d4ff;
+        margin-bottom: 20px;
+        text-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+        animation: slideInDown 1s;
+      }
+
+      @keyframes slideInDown {
+        from {
+          opacity: 0;
+          transform: translateY(-50px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .subtitle {
+        font-size: 1.5rem;
+        color: #a0a0a0;
+        margin-bottom: 50px;
+        animation: fadeIn 1.5s;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      .action-buttons {
+        display: flex;
+        gap: 30px;
+        flex-wrap: wrap;
+        justify-content: center;
+        animation: slideInUp 1.5s;
+        margin-bottom: 50px;
+      }
+
+      @keyframes slideInUp {
+        from {
+          opacity: 0;
+          transform: translateY(50px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .action-card {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(10px);
+        border: 2px solid rgba(0, 212, 255, 0.3);
+        border-radius: 20px;
+        padding: 40px;
+        width: 280px;
+        cursor: pointer;
+        transition: all 0.4s;
+        text-decoration: none;
+        color: white;
+      }
+
+      .action-card:hover {
+        transform: translateY(-15px) scale(1.05);
+        background: rgba(0, 212, 255, 0.1);
+        box-shadow: 0 20px 40px rgba(0, 212, 255, 0.3);
+        border-color: #00d4ff;
+      }
+
+      .action-icon {
+        font-size: 4rem;
+        margin-bottom: 20px;
+        filter: drop-shadow(0 0 10px rgba(0, 212, 255, 0.5));
+      }
+
+      .action-title {
+        font-size: 1.8rem;
+        font-weight: bold;
+        margin-bottom: 10px;
+        color: #00d4ff;
+      }
+
+      .action-desc {
+        font-size: 1rem;
+        opacity: 0.8;
+        color: #a0a0a0;
+      }
+
+      /* Chart Container */
+      .chart-container {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(10px);
+        border: 2px solid rgba(0, 212, 255, 0.2);
+        border-radius: 20px;
+        padding: 30px;
+        margin: 30px auto;
+        max-width: 600px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      }
+
+      .chart-container h3 {
+        color: #00d4ff;
+        margin-bottom: 20px;
+        text-align: center;
+      }
+
+      /* Mood Selection Page */
+      .mood-page {
+        min-height: 100vh;
+        background: linear-gradient(
+          135deg,
+          #0a0a0a 0%,
+          #1a1a2e 50%,
+          #16213e 100%
+        );
+        padding: 50px 20px;
+      }
+
+      .mood-header {
+        text-align: center;
+        color: white;
+        margin-bottom: 50px;
+      }
+
+      .mood-header h1 {
+        font-size: 3.5rem;
+        font-weight: bold;
+        margin-bottom: 20px;
+        color: #00d4ff;
+        text-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+      }
+
+      .mood-header p {
+        color: #a0a0a0;
+      }
+
+      /* === REACT INTEGRATION START === */
+      /* This class is added to the container that React renders into */
+      .mood-grid-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 30px;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+      /* The .mood-card styles remain the same for React components */
+      /* === REACT INTEGRATION END === */
+
+      .mood-card {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(10px);
+        border: 2px solid rgba(0, 212, 255, 0.2);
+        border-radius: 20px;
+        padding: 40px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.4s;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .mood-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          135deg,
+          transparent 0%,
+          rgba(0, 212, 255, 0.1) 100%
+        );
+        opacity: 0;
+        transition: opacity 0.4s;
+      }
+
+      .mood-card:hover::before {
+        opacity: 1;
+      }
+
+      .mood-card:hover {
+        transform: translateY(-15px) rotate(2deg);
+        box-shadow: 0 20px 50px rgba(0, 212, 255, 0.3);
+        border-color: #00d4ff;
+      }
+
+      .mood-card-icon {
+        font-size: 5rem;
+        margin-bottom: 20px;
+      }
+
+      .mood-card-title {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #00d4ff;
+        margin-bottom: 10px;
+      }
+
+      .mood-card-count {
+        color: #a0a0a0;
+        font-size: 1.1rem;
+      }
+
+      /* Playlist Page styles (unchanged) */
+      .playlist-page {
+        min-height: 100vh;
+        background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
+        padding: 30px 20px;
+      }
+
+      .playlist-header {
+        text-align: center;
+        color: white;
+        margin-bottom: 30px;
+      }
+
+      .playlist-header h1 {
+        font-size: 3rem;
+        font-weight: bold;
+        margin-bottom: 20px;
+        color: #00d4ff;
+        text-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+      }
+
+      .back-btn {
+        background: rgba(0, 212, 255, 0.1);
+        color: #00d4ff;
+        border: 2px solid #00d4ff;
+        padding: 12px 30px;
+        border-radius: 50px;
+        cursor: pointer;
+        font-size: 1.1rem;
+        font-weight: bold;
+        transition: all 0.3s;
+        margin-bottom: 30px;
+      }
+
+      .back-btn:hover {
+        background: #00d4ff;
+        color: #0a0a0a;
+        transform: scale(1.05);
+        box-shadow: 0 5px 20px rgba(0, 212, 255, 0.5);
+      }
+
+      .current-playing {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(10px);
+        border: 2px solid rgba(0, 212, 255, 0.3);
+        border-radius: 20px;
+        padding: 30px;
+        margin-bottom: 30px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        text-align: center;
+      }
+
+      .current-playing h4 {
+        color: #00d4ff;
+        margin-bottom: 15px;
+      }
+
+      .current-playing p {
+        color: #fff;
+      }
+
+      .current-playing audio {
+        width: 100%;
+        margin-top: 15px;
+      }
+
+      .song-card {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(10px);
+        border: 2px solid rgba(0, 212, 255, 0.2);
+        border-radius: 15px;
+        padding: 25px;
+        margin-bottom: 20px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+        transition: all 0.3s;
+      }
+
+      .song-card:hover {
+        transform: translateX(10px);
+        box-shadow: 0 8px 25px rgba(0, 212, 255, 0.3);
+        border-color: #00d4ff;
+      }
+
+      .song-title {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #00d4ff;
+        margin-bottom: 10px;
+      }
+
+      .song-artist {
+        color: #a0a0a0;
+        margin-bottom: 15px;
+        font-size: 1.1rem;
+      }
+
+      .play-btn {
+        background: linear-gradient(135deg, #00d4ff 0%, #00a8cc 100%);
+        color: #0a0a0a;
+        border: none;
+        padding: 12px 30px;
+        border-radius: 50px;
+        cursor: pointer;
+        font-size: 1.1rem;
+        font-weight: bold;
+        transition: all 0.3s;
+      }
+
+      .play-btn:hover {
+        transform: scale(1.1);
+        box-shadow: 0 5px 15px rgba(0, 212, 255, 0.5);
+      }
+
+      .page {
+        display: none;
+      }
+
+      .page.active {
+        display: block;
+      }
+
+      .search-container {
+        max-width: 800px;
+        margin: 0 auto 30px;
+      }
+
+      .search-box {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(10px);
+        border: 2px solid rgba(0, 212, 255, 0.3);
+        border-radius: 50px;
+        padding: 15px 30px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+        display: flex;
+        align-items: center;
+      }
+
+      .search-box input {
+        border: none;
+        outline: none;
+        flex: 1;
+        font-size: 1.1rem;
+        padding: 5px;
+        background: transparent;
+        color: #fff;
+      }
+
+      .search-box input::placeholder {
+        color: #a0a0a0;
+      }
+
+      .search-box i {
+        color: #00d4ff;
+        font-size: 1.5rem;
+        margin-right: 15px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="landingPage" class="page active">
+      <div class="landing-page">
+        <div class="floating-notes">
+          <div class="note">🎵</div>
+          <div class="note">🎶</div>
+          <div class="note">🎵</div>
+          <div class="note">🎶</div>
+          <div class="note">🎵</div>
+        </div>
+
+        <div class="landing-content">
+          <div class="logo-container">
+            <div class="logo">🎧</div>
+          </div>
+
+          <h1 class="main-title">MoodTunes</h1>
+          <p class="subtitle">Your emotions, your soundtrack</p>
+
+          <div class="chart-container">
+            <h3>📊 Mood Statistics</h3>
+            <canvas id="moodChart"></canvas>
+          </div>
+
+          <div class="action-buttons">
+            <div class="action-card" onclick="showAllSongs()">
+              <div class="action-icon">🎵</div>
+              <div class="action-title">All Songs</div>
+              <div class="action-desc">Browse our complete collection</div>
+            </div>
+
+            <div class="action-card" onclick="showMoodSelection()">
+              <div class="action-icon">😊</div>
+              <div class="action-title">Mood Playlist</div>
+              <div class="action-desc">Find music that matches your vibe</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="moodSelectionPage" class="page">
+      <div class="mood-page">
+        <button class="back-btn" onclick="showLanding()">
+          <i class="fas fa-arrow-left"></i> Back to Home
+        </button>
+
+        <div class="mood-header">
+          <h1>How are you feeling today?</h1>
+          <p style="font-size: 1.3rem">
+            Choose your mood and let the music play
+          </p>
+        </div>
+
+        <div id="moodGrid"></div>
+      </div>
+    </div>
+
+    <div id="allSongsPage" class="page">
+      <div class="playlist-page">
+        <button class="back-btn" onclick="showLanding()">
+          <i class="fas fa-arrow-left"></i> Back to Home
+        </button>
+
+        <div class="playlist-header">
+          <h1>🎵 All Songs</h1>
+          <p style="font-size: 1.2rem; color: #a0a0a0">
+            Explore our entire music collection
+          </p>
+        </div>
+
+        <div class="search-container">
+          <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input
+              type="text"
+              id="searchInput"
+              placeholder="Search for songs, artists..."
+              oninput="handleSearch(this.value)"
+            />
+          </div>
+        </div>
+
+        <div
+          class="current-playing"
+          id="currentPlayingAll"
+          style="display: none"
+        >
+          <h4>Now Playing</h4>
+          <p id="nowPlayingTitleAll"></p>
+          <audio id="audioPlayerAll" controls></audio>
+        </div>
+
+        <div class="container">
+          <div id="allSongsList"></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="moodPlaylistPage" class="page">
+      <div class="playlist-page">
+        <button class="back-btn" onclick="showMoodSelection()">
+          <i class="fas fa-arrow-left"></i> Back to Moods
+        </button>
+
+        <div class="playlist-header">
+          <h1 id="moodTitle"></h1>
+        </div>
+
+        <div
+          class="current-playing"
+          id="currentPlayingMood"
+          style="display: none"
+        >
+          <h4>Now Playing</h4>
+          <p id="nowPlayingTitleMood"></p>
+          <audio id="audioPlayerMood" controls></audio>
+        </div>
+
+        <div class="container">
+          <div id="moodSongsList"></div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.3.0/chart.umd.min.js"></script>
+    <script
+      crossorigin
+      src="https://unpkg.com/react@18/umd/react.production.min.js"
+    ></script>
+    <script
+      crossorigin
+      src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"
+    ></script>
+
+    <script>
+      // Music Database (unchanged)
+      const musicDatabase = [
+        {
+          id: 1,
+          title: "Sunny Day",
+          artist: "Happy Beats",
+          mood: "happy",
+          url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+        },
+        {
+          id: 2,
+          title: "Joy Ride",
+          artist: "Cheerful Tunes",
+          mood: "happy",
+          url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
+        },
+        {
+          id: 3,
+          title: "Smile Again",
+          artist: "Positive Vibes",
+          mood: "happy",
+          url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3",
+        },
+
+        {
+          id: 4,
+          title: "Rainy Thoughts",
+          artist: "Melancholy Music",
+          mood: "sad",
+          url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3",
+        },
+        {
+          id: 5,
+          title: "Lonely Heart",
+          artist: "Sad Strings",
+          mood: "sad",
+          url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3",
+        },
+        {
+          id: 6,
+          title: "Tears Fall",
+          artist: "Blue Notes",
+          mood: "sad",
+          url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3",
+        },
+
+        {
+          id: 7,
+          title: "Power Up",
+          artist: "Energy Boost",
+          mood: "energetic",
+          url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-7.mp3",
+        },
+        {
+          id: 8,
+          title: "Unstoppable",
+          artist: "High Tempo",
+          mood: "energetic",
+          url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3",
+        },
+        {
+          id: 9,
+          title: "Lightning Strike",
+          artist: "Electric Beats",
+          mood: "energetic",
+          url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-9.mp3",
+        },
+
+        {
+          id: 10,
+          title: "Peaceful Mind",
+          artist: "Calm Sounds",
+          mood: "relaxed",
+          url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-10.mp3",
+        },
+        {
+          id: 11,
+          title: "Ocean Waves",
+          artist: "Serenity",
+          mood: "relaxed",
+          url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-11.mp3",
+        },
+        {
+          id: 12,
+          title: "Zen Garden",
+          artist: "Tranquil Tunes",
+          mood: "relaxed",
+          url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-12.mp3",
+        },
+
+        {
+          id: 13,
+          title: "Love Story",
+          artist: "Romance Records",
+          mood: "romantic",
+          url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-13.mp3",
+        },
+        {
+          id: 14,
+          title: "Heart to Heart",
+          artist: "Sweet Melodies",
+          mood: "romantic",
+          url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-14.mp3",
+        },
+        {
+          id: 15,
+          title: "Forever Yours",
+          artist: "Love Songs",
+          mood: "romantic",
+          url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-15.mp3",
+        },
+      ];
+
+      let allSongs = [];
+      let currentMood = null;
+
+      // Mood Data for React Rendering
+      const MOODS_DATA = [
+        { name: "happy", emoji: "😊" },
+        { name: "sad", emoji: "😢" },
+        { name: "energetic", emoji: "⚡" },
+        { name: "relaxed", emoji: "😌" },
+        { name: "romantic", emoji: "💕" },
+      ];
+
+      // Async function to fetch songs (simulating API with fetch) (unchanged)
+      const fetchSongs = async () => {
+        try {
+          // Simulating API delay
+          await new Promise((resolve) => setTimeout(resolve, 500));
+          return musicDatabase;
+        } catch (error) {
+          console.error("Error fetching songs:", error);
+          return [];
+        }
+      };
+
+      // Initialize app (unchanged)
+      const initApp = async () => {
+        allSongs = await fetchSongs();
+        createMoodChart();
+        renderMoodGrid(); // This calls the new React rendering function
+      };
+
+      // Create mood chart (Data Visualization with Chart.js) (unchanged)
+      const createMoodChart = () => {
+        const moodCounts = allSongs.reduce((acc, song) => {
+          acc[song.mood] = (acc[song.mood] || 0) + 1;
+          return acc;
+        }, {});
+
+        const ctx = document.getElementById("moodChart").getContext("2d");
+        new Chart(ctx, {
+          type: "doughnut",
+          data: {
+            labels: Object.keys(moodCounts).map(
+              (mood) => mood.charAt(0).toUpperCase() + mood.slice(1)
+            ),
+            datasets: [
+              {
+                label: "Number of Songs",
+                data: Object.values(moodCounts),
+                backgroundColor: [
+                  "rgba(255, 206, 86, 0.8)",
+                  "rgba(54, 162, 235, 0.8)",
+                  "rgba(255, 99, 132, 0.8)",
+                  "rgba(75, 192, 192, 0.8)",
+                  "rgba(153, 102, 255, 0.8)",
+                ],
+                borderColor: [
+                  "rgba(255, 206, 86, 1)",
+                  "rgba(54, 162, 235, 1)",
+                  "rgba(255, 99, 132, 1)",
+                  "rgba(75, 192, 192, 1)",
+                  "rgba(153, 102, 255, 1)",
+                ],
+                borderWidth: 2,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              legend: {
+                position: "bottom",
+                labels: {
+                  color: "#00d4ff",
+                  font: { size: 14 },
+                },
+              },
+              title: {
+                display: true,
+                text: "Music Library by Mood",
+                color: "#00d4ff",
+                font: { size: 18 },
+              },
+            },
+          },
+        });
+      };
+
+      // =======================================================
+      // REACT COMPONENT AND RENDERING LOGIC
+      // =======================================================
+
+      // 1. Define the React Component (using React.createElement since Babel isn't used)
+      const MoodCard = (props) => {
+        const mood = props.mood;
+        // State logic: calculate count based on allSongs array (global state)
+        const count = allSongs.filter((s) => s.mood === mood.name).length;
+        const displayName =
+          mood.name.charAt(0).toUpperCase() + mood.name.slice(1);
+
+        // Build the V-DOM structure
+        return React.createElement(
+          "div", // Element type
+          {
+            // Props and attributes
+            className: "mood-card",
+            // Use the global Vanilla JS function as the event handler
+            onClick: () => selectMood(mood.name),
+          },
+          // Children elements
+          React.createElement(
+            "div",
+            { className: "mood-card-icon" },
+            mood.emoji
+          ),
+          React.createElement(
+            "div",
+            { className: "mood-card-title" },
+            displayName
+          ),
+          React.createElement(
+            "div",
+            { className: "mood-card-count" },
+            `${count} songs`
+          )
+        );
+      };
+
+      // 2. Function to render the mood grid using ReactDOM
+      const renderMoodGrid = () => {
+        const gridContainer = document.getElementById("moodGrid");
+
+        // Map the data to React elements
+        const moodElements = MOODS_DATA.map((mood) =>
+          React.createElement(MoodCard, { key: mood.name, mood: mood })
+        );
+
+        // The root element for the grid needs the CSS class for layout
+        const rootElement = React.createElement(
+          "div",
+          { className: "mood-grid-container" },
+          moodElements
+        );
+
+        // Render the elements into the designated DOM node
+        ReactDOM.render(rootElement, gridContainer);
+      };
+
+      // =======================================================
+      // END OF REACT LOGIC
+      // =======================================================
+
+      // Show landing page (unchanged)
+      const showLanding = () => {
+        hideAllPages();
+        document.getElementById("landingPage").classList.add("active");
+      };
+
+      // Show mood selection page (unchanged)
+      const showMoodSelection = () => {
+        hideAllPages();
+        document.getElementById("moodSelectionPage").classList.add("active");
+        // Re-render the grid just in case the song data changed (good practice)
+        renderMoodGrid();
+      };
+
+      // Show all songs page (unchanged)
+      const showAllSongs = () => {
+        hideAllPages();
+        document.getElementById("allSongsPage").classList.add("active");
+        displayAllSongs(allSongs);
+      };
+
+      // Hide all pages (unchanged)
+      const hideAllPages = () => {
+        document.querySelectorAll(".page").forEach((page) => {
+          page.classList.remove("active");
+        });
+      };
+
+      // Display all songs (Vanilla JS - unchanged)
+      const displayAllSongs = (songs) => {
+        const container = document.getElementById("allSongsList");
+        container.innerHTML = songs
+          .map(
+            (song) => `
+                <div class="song-card">
+                    <div class="song-title">${song.title}</div>
+                    <div class="song-artist"><i class="fas fa-user"></i> ${
+                      song.artist
+                    }</div>
+                    <div class="song-artist"><i class="fas fa-heart"></i> Mood: ${
+                      song.mood.charAt(0).toUpperCase() + song.mood.slice(1)
+                    }</div>
+                    <button class="play-btn" onclick="playSong(${
+                      song.id
+                    }, 'all')">
+                        <i class="fas fa-play"></i> Play Song
+                    </button>
+                </div>
+            `
+          )
+          .join("");
+      };
+
+      // Search functionality (Vanilla JS - unchanged)
+      const handleSearch = (searchTerm) => {
+        const filtered = allSongs.filter(
+          (song) =>
+            song.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            song.artist.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            song.mood.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+        displayAllSongs(filtered);
+      };
+
+      // Select mood (Vanilla JS - unchanged)
+      const selectMood = (mood) => {
+        currentMood = mood;
+        const moodSongs = allSongs.filter((song) => song.mood === mood);
+
+        hideAllPages();
+        document.getElementById("moodPlaylistPage").classList.add("active");
+
+        const moodEmojis = {
+          happy: "😊",
+          sad: "😢",
+          energetic: "⚡",
+          relaxed: "😌",
+          romantic: "💕",
+        };
+
+        document.getElementById("moodTitle").innerHTML = `${moodEmojis[mood]} ${
+          mood.charAt(0).toUpperCase() + mood.slice(1)
+        } Playlist`;
+
+        displayMoodSongs(moodSongs);
+      };
+
+      // Display mood songs (Vanilla JS - unchanged)
+      const displayMoodSongs = (songs) => {
+        const container = document.getElementById("moodSongsList");
+        container.innerHTML = songs
+          .map(
+            (song) => `
+                <div class="song-card">
+                    <div class="song-title">${song.title}</div>
+                    <div class="song-artist"><i class="fas fa-user"></i> ${song.artist}</div>
+                    <button class="play-btn" onclick="playSong(${song.id}, 'mood')">
+                        <i class="fas fa-play"></i> Play Song
+                    </button>
+                </div>
+            `
+          )
+          .join("");
+      };
+
+      // Play song (Vanilla JS - unchanged)
+      const playSong = (songId, page) => {
+        const song = allSongs.find((s) => s.id === songId);
+        if (!song) return;
+
+        if (page === "all") {
+          document.getElementById("currentPlayingAll").style.display = "block";
+          document.getElementById(
+            "nowPlayingTitleAll"
+          ).innerHTML = `<strong>${song.title}</strong> by ${song.artist}`;
+          document.getElementById("audioPlayerAll").src = song.url;
+          document.getElementById("audioPlayerAll").play();
+        } else {
+          document.getElementById("currentPlayingMood").style.display = "block";
+          document.getElementById(
+            "nowPlayingTitleMood"
+          ).innerHTML = `<strong>${song.title}</strong> by ${song.artist}`;
+          document.getElementById("audioPlayerMood").src = song.url;
+          document.getElementById("audioPlayerMood").play();
+        }
+      };
+
+      // Initialize the app when page loads
+      window.addEventListener("DOMContentLoaded", initApp);
+    </script>
+  </body>
+</html>
